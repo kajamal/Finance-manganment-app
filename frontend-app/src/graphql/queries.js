@@ -1,3 +1,4 @@
+
 import { gql } from '@apollo/client';
 
 export const GET_DASHBOARD_DATA = gql`
@@ -18,18 +19,6 @@ export const GET_DASHBOARD_DATA = gql`
   }
 `;
 
-export const GET_TRANSACTIONS = gql`
-  query GetTransactions {
-    transactions {
-      id
-      description
-      amount
-      category
-      type
-    }
-  }
-`;
-
 export const GET_TRANSACTION = gql`
   query GetTransaction($id: ID!) {
     transaction(id: $id) {
@@ -42,3 +31,5 @@ export const GET_TRANSACTION = gql`
     }
   }
 `;
+
+
