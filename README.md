@@ -34,10 +34,12 @@ cd Finance-manganment-app
 
 Frontend:
 cd frontend
+
 npm install
 
 Backend:
 cd backend
+
 npm install
 
 ### Setup Environment Variables:
