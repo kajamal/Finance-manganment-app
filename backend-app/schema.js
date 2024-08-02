@@ -26,6 +26,7 @@ const typeDefs = gql`
     amount: Float!
     category: String!
     type: String!
+    date: String
   
     user: ID!
   }

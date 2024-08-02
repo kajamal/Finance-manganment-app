@@ -13,6 +13,7 @@ export const GET_DASHBOARD_DATA = gql`
       amount
       category
       type
+      date
       
       
     }

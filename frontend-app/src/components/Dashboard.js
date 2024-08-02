@@ -1,15 +1,20 @@
 import React, { useState } from 'react';
 import { useMutation, useQuery } from '@apollo/client';
 import { GET_DASHBOARD_DATA } from '../graphql/queries';
-import { useNavigate } from 'react-router-dom';
-import { Link } from 'react-router-dom';    
-import './styles/Dashboard.css';
+import { useNavigate, Link } from 'react-router-dom';    
+import { Container, Typography, Box, Grid, Button, MenuItem, Select, FormControl, InputLabel, CircularProgress, IconButton, Paper, Divider, TextField } from '@mui/material';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import AddIcon from '@mui/icons-material/Add';
+import LogoutIcon from '@mui/icons-material/Logout';
 import { DELETE_TRANSACTION } from '../graphql/mutations';
+import './styles/Dashboard.css';
 
 const Dashboard = () => {
   const { loading, error, data } = useQuery(GET_DASHBOARD_DATA);
   const navigate = useNavigate();
   const [selectedCategory, setSelectedCategory] = useState('All');
+  const [searchQuery, setSearchQuery] = useState('');
 
   const [deleteTransaction] = useMutation(DELETE_TRANSACTION, {
     update(cache, { data: { deleteTransaction } }) {
@@ -24,8 +29,8 @@ const Dashboard = () => {
     refetchQueries: [{ query: GET_DASHBOARD_DATA }],
   });
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error.message}</p>;
+  if (loading) return <CircularProgress />;
+  if (error) return <Typography color="error">Error: {error.message}</Typography>;
 
   const { totalBalance, totalIncome, totalExpenses, categories, transactions } = data;
 
@@ -39,74 +44,139 @@ const Dashboard = () => {
   };
 
   const handleDelete = async (id) => {
-    console.log('Deleting transaction with ID:', id);
     try {
       await deleteTransaction({ variables: { id } });
     } catch (error) {
       console.error("Error deleting transaction:", error);
     }
   };
+  const formatDate = (timestamp) => {
+    const date = new Date(Number(timestamp));
+    const options = { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+    return date.toLocaleDateString(undefined, options);
+  };
 
-  // Filter transactions based on the selected category
-  const filteredTransactions = selectedCategory === 'All' 
-    ? transactions 
-    : transactions.filter(tx => tx.category === selectedCategory);
+  const filteredTransactions = transactions
+  .filter(tx => 
+    (selectedCategory === 'All' || tx.category === selectedCategory) &&
+    (
+      tx.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      tx.amount.toString().toLowerCase().includes(searchQuery.toLowerCase()) ||
+      tx.type.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      formatDate(tx.date).includes(searchQuery.toLowerCase())
+    )
+  );
 
   return (
-    <div className="dashboard-container">
-      <div className="top-bar">
-        <h2>Dashboard</h2>
-        <div className="top-bar-buttons">
-          <Link to="/transactions/add" className="add-transaction-button">Add New Transaction</Link>
-          <button onClick={handleLogout} className="logout-button">Logout</button>
-        </div>
-      </div>
-      <div className="balance-summary">
-        <p>Total Balance: ${totalBalance}</p>
-        <p>Income: ${totalIncome}</p>
-        <p>Expenses: ${totalExpenses}</p>
-      </div>
-      <div className="categories-section">
-        <h3>Categories</h3>
-        <ul>
+    <Container maxWidth="lg" className="dashboard-container">
+      <Box className="top-bar">
+        <Typography variant="h4" component="h1">Dashboard</Typography>
+        <Box className="top-bar-buttons">
+          <Button 
+            component={Link} 
+            to="/transactions/add" 
+            variant="contained" 
+            color="primary" 
+            startIcon={<AddIcon />}
+            className="add-transaction-button"
+          >
+            Add New Transaction
+          </Button>
+          <Button 
+            onClick={handleLogout} 
+            variant="contained" 
+            color="secondary" 
+            startIcon={<LogoutIcon />}
+            className="logout-button"
+          >
+            Logout
+          </Button>
+        </Box>
+      </Box>
+      <Grid container spacing={3}>
+        <Grid item xs={12} md={4}>
+          <Paper className="balance-summary">
+            <Typography variant="h6">Total Balance</Typography>
+            <Typography variant="h4">${totalBalance}</Typography>
+          </Paper>
+        </Grid>
+        <Grid item xs={6} md={4}>
+          <Paper className="balance-summary">
+            <Typography variant="h6">Income</Typography>
+            <Typography variant="h4">${totalIncome}</Typography>
+          </Paper>
+        </Grid>
+        <Grid item xs={6} md={4}>
+          <Paper className="balance-summary">
+            <Typography variant="h6">Expenses</Typography>
+            <Typography variant="h4">${totalExpenses}</Typography>
+          </Paper>
+        </Grid>
+      </Grid>
+      <Paper className="categories-section">
+        <Typography variant="h5">Categories</Typography>
+        <Divider />
+        <Box className="category-list">
           {categories.map((category) => (
-            <li key={category}>{category}</li>
+            <Typography key={category} variant="body1" className="category-item">{category}</Typography>
           ))}
-        </ul>
-      </div>
-      <div className="transaction-filter-section">
-        <label htmlFor="category-filter">Filter by Category:</label>
-        <select
-          id="category-filter"
-          value={selectedCategory}
-          onChange={(e) => setSelectedCategory(e.target.value)}
-        >
-          <option value="All">All</option>
-          {categories.map((category) => (
-            <option key={category} value={category}>
-              {category}
-            </option>
-          ))}
-        </select>
-      </div>
-      <div className="transaction-list-section">
-        <h3>Transaction List</h3>
-        <ul>
+        </Box>
+      </Paper>
+      <Paper className="transaction-filter-section">
+        <Grid container spacing={2} alignItems="center">
+          <Grid item xs={12} md={6}>
+            <FormControl fullWidth>
+              <InputLabel htmlFor="category-filter">Filter by Category</InputLabel>
+              <Select
+                id="category-filter"
+                value={selectedCategory}
+                onChange={(e) => setSelectedCategory(e.target.value)}
+              >
+                <MenuItem value="All">All</MenuItem>
+                {categories.map((category) => (
+                  <MenuItem key={category} value={category}>{category}</MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <TextField
+              label="Search"
+              variant="outlined"
+              fullWidth
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </Grid>
+        </Grid>
+      </Paper>
+      <Paper className="transaction-list-section">
+        <Typography variant="h5">Transaction List</Typography>
+        <Divider />
+        <Box className="transaction-list">
           {filteredTransactions.map((tx, index) => (
-            <li key={tx.id} className="transaction-item">
-              <div className="transaction-details">
-                {index + 1}. {tx.category} - ${tx.amount} - {tx.type}
-              </div>
-              <div className="transaction-actions">
-                <button className="button-edit" onClick={() => handleEdit(tx.id)}>Edit</button>
-                <button className="button-delete" onClick={() => handleDelete(tx.id)}>Delete</button>
-              </div>
-            </li>
+            <Box key={tx.id} className="transaction-item">
+              <Typography variant="body1">
+                <strong>{index + 1}. Category:</strong> {tx.category} <br/>
+                <strong>Amount:</strong> ${tx.amount} <br/>
+                <strong>Type:</strong> {tx.type} <br/>
+                <strong>Date:</strong> {formatDate(tx.date)}
+              </Typography>
+              <Box className="transaction-actions">
+                <IconButton color="primary" onClick={() => handleEdit(tx.id)}>
+                  <EditIcon />
+                </IconButton>
+                <IconButton color="secondary" onClick={() => handleDelete(tx.id)}>
+                  <DeleteIcon />
+                </IconButton>
+              </Box>
+            </Box>
           ))}
-        </ul>
-      </div>
-    </div>
+        </Box>
+      </Paper>
+    </Container>
   );
 };
 
 export default Dashboard;
+

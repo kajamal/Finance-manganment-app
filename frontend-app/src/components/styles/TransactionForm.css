@@ -1,0 +1,54 @@
+.transaction-form-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #ffffff; /* White background for the form */
+    border-radius: 8px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1); /* Subtle shadow for card effect */
+  }
+  
+  .transaction-form-container h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333333; /* Dark grey text for the heading */
+  }
+  
+  .transaction-form-container form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px; /* Space between form elements */
+  }
+  
+  .transaction-form-container .MuiFormControl-root {
+    margin-bottom: 16px; /* Space below form controls */
+  }
+  
+  .transaction-form-container .MuiInputLabel-root {
+    color: #666666; /* Lighter grey for input labels */
+  }
+  
+  .transaction-form-container .MuiOutlinedInput-root {
+    border-radius: 8px;
+  }
+  
+  .transaction-form-container .MuiButton-containedPrimary {
+    background-color: #4caf50; /* Green background for the submit button */
+    color: white;
+    border-radius: 8px;
+    padding: 12px 20px;
+    font-size: 16px;
+    text-transform: uppercase; /* Uppercase text for a more professional look */
+  }
+  
+  .transaction-form-container .MuiButton-containedPrimary:hover {
+    background-color: #45a049; /* Slightly darker green on hover */
+  }
+  
+  .transaction-form-container .MuiButton-containedPrimary:active {
+    background-color: #388e3c; /* Even darker green on active */
+  }
+  
+  .transaction-form-container .MuiButton-root {
+    margin-top: 20px; /* Space above the button */
+  }
+  

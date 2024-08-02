@@ -29,6 +29,8 @@ export const ADD_TRANSACTION = gql`
   }
 `;
 
+
+
 export const UPDATE_TRANSACTION = gql`
   mutation UpdateTransaction($id: ID!, $description: String, $amount: Float, $category: String, $type: String) {
     updateTransaction(id: $id, description: $description, amount: $amount, category: $category, type: $type) {

@@ -4,12 +4,13 @@ import { GET_DASHBOARD_DATA, GET_TRANSACTION } from '../graphql/queries';
 import { ADD_TRANSACTION, UPDATE_TRANSACTION } from '../graphql/mutations';
 import { useParams, useNavigate } from 'react-router-dom';
 import { TextField, Button, MenuItem, Select, InputLabel, FormControl } from '@mui/material';
+import './styles/TransactionList.css'; 
 
-const TransactionForm = () => {
+const TransactionList = () => {
   const { id } = useParams();
   const { loading, error, data } = useQuery(GET_TRANSACTION, {
     variables: { id },
-    skip: !id, // Skip query if no id
+    skip: !id, 
   });
 
   const [addTransaction] = useMutation(ADD_TRANSACTION, {
@@ -54,13 +55,16 @@ const TransactionForm = () => {
       console.error('Error saving transaction:', error);
     }
   };
+     const handleCancel = () => {
+      navigate('/dashboard');
+  };
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
 
   return (
-    <div>
-      <h2>{id ? 'Edit Transaction' : 'Add Transaction'}</h2>
+    <div className="transaction-form-container">
+      <h2>Edit Transaction'</h2>
       <form onSubmit={handleSubmit}>
         <TextField
           label="Description"
@@ -101,12 +105,12 @@ const TransactionForm = () => {
           </Select>
         </FormControl>
         <Button type="submit" variant="contained" color="primary">
-          {id ? 'Update' : 'Add'}
+         ADD
         </Button>
+        <Button variant="contained" color="primary" onClick={handleCancel}>CANCEL</Button>
       </form>
     </div>
   );
 };
 
-export default TransactionForm;
-
+export default TransactionList;
