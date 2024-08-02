@@ -71,7 +71,7 @@ const resolvers = {
     },
     async addTransaction(_, { description, amount, category, type }, { user }) {
       if (!user) throw new Error('Not authenticated');
-      if (!type) throw new Error('Type is required'); // Validate type
+      if (!type) throw new Error('Type is required');
       const newTransaction = new Transaction({
         description,
         amount,

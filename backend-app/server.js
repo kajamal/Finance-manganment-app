@@ -45,8 +45,8 @@ const server = new ApolloServer({
 
 // Start Apollo Server
 const startServer = async () => {
-  await server.start(); // Await the server start
-  server.applyMiddleware({ app }); // Apply middleware after server starts
+  await server.start(); 
+  server.applyMiddleware({ app });
 
   // Connect to MongoDB
   mongoose.connect(MONGO_URI, {
