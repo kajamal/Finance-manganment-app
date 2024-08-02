@@ -104,11 +104,11 @@ const TransactionList = () => {
             <MenuItem value="expense">Expense</MenuItem>
           </Select>
         </FormControl>
-        <Button type="submit" variant="contained" color="primary">
-         ADD
-        </Button>
-        <Button variant="contained" color="primary" onClick={handleCancel}>CANCEL</Button>
+        <div style={{display:"flex",justifyContent:"center",alignItems:"center",gap:"15px"}}><Button type="submit" variant="contained" color="primary" className="submit-button">Update</Button>
+        <Button variant="contained" color="primary" className="submit-button" onClick={handleCancel}>Cancel</Button>
+        </div>
       </form>
+      
     </div>
   );
 };

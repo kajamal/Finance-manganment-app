@@ -50,6 +50,7 @@ const Dashboard = () => {
       console.error("Error deleting transaction:", error);
     }
   };
+
   const formatDate = (timestamp) => {
     const date = new Date(Number(timestamp));
     const options = { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' };
@@ -128,6 +129,7 @@ const Dashboard = () => {
             <FormControl fullWidth>
               <InputLabel htmlFor="category-filter">Filter by Category</InputLabel>
               <Select
+              label = "Filter by Category"
                 id="category-filter"
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value)}

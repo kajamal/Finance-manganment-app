@@ -42,7 +42,7 @@ const TransactionForm = () => {
           variables: { id, description, amount: parseFloat(amount), category, type },
         });
       } else {
-        await addTransaction({
+         await addTransaction({
           variables: { description, amount: parseFloat(amount), category, type },
         });
       }
@@ -58,6 +58,7 @@ const TransactionForm = () => {
   if (loading) return <CircularProgress />;
 
   return (
+    <div style={{width:"100%",height:"100%"}}>
     <div className="transaction-form-container">
       <h2>Add Transaction</h2>
       <form onSubmit={handleSubmit}>
@@ -103,9 +104,12 @@ const TransactionForm = () => {
             <MenuItem value="expense">Expense</MenuItem>
           </Select>
         </FormControl>
-        <Button type="submit" variant="contained" color="primary" className="submit-button">ADD</Button>
-        <Button variant="contained" color="primary" className="submit-button" onClick={handleCancel}>CANCEL</Button>
+        <div style={{display:"flex",justifyContent:"center",alignItems:"center",gap:"15px"}}><Button type="submit" variant="contained" color="primary" className="submit-button">Add</Button>
+        <Button variant="contained" color="primary" className="submit-button" onClick={handleCancel}>Cancel</Button>
+        </div>
+      
       </form>
+    </div>
     </div>
   );
 };
